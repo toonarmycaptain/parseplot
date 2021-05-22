@@ -1,7 +1,8 @@
 """Bokeh plotter"""
 from __future__ import annotations
 from pathlib import Path
-from typing import (Optional,
+from typing import (Any,
+                    Optional,
                     Sequence,
                     TYPE_CHECKING,
                     Union,
@@ -24,14 +25,14 @@ class BokehPlotter:
     """Plotter wrapping Bokeh"""
 
     def __init__(self,
-                 points: Union[Sequence[tuple[int, float]],
-                               Sequence[Sequence[tuple[int, float]]]] = None,
+                 points: Union[Sequence[tuple[Union[int, float], Union[int, float]]],
+                               Sequence[Sequence[tuple[Union[int, float], Union[int, float]]]]] = None,
                  *,
                  title: str = None,
                  x_axis_label: str = None,
                  y_axis_label: str = None,
-                 x_axis_location: str = None,
-                 y_axis_location: str = None,
+                 x_axis_location: Union[int, float] = None,
+                 y_axis_location: Union[int, float] = None,
                  ) -> None:
         """
         Object wrapping bokeh plotting functionality.
@@ -63,8 +64,8 @@ class BokehPlotter:
         self.title: Optional[str] = title
         self.x_axis_label: Optional[str] = x_axis_label
         self.y_axis_label: Optional[str] = y_axis_label
-        self.x_axis_location: Optional[str] = x_axis_location
-        self.y_axis_location: Optional[str] = y_axis_location
+        self.x_axis_location: Optional[Union[int, float]] = x_axis_location
+        self.y_axis_location: Optional[Union[int, float]] = y_axis_location
 
         self._plot: figure = figure(title=self.title,
                                     x_axis_label=x_axis_label,
@@ -72,14 +73,14 @@ class BokehPlotter:
         self._plot.xaxis.fixed_location = self.x_axis_location
         self._plot.yaxis.fixed_location = self.y_axis_location
 
-        self.points: list[Sequence[tuple[int, float]]] = []
+        self.points: list[Sequence[tuple[Union[int, float], Union[int, float]]]] = []
         if points:
             self.__add_lines(points)
 
         self.plotted = None
 
     def add_line(self,
-                 points: Sequence[tuple[int, float]],
+                 points: Sequence[tuple[Union[int, float], Union[int, float]]],
                  legend_label: str = None,
                  line_color: str = None,
                  line_width: int = None,
@@ -94,9 +95,9 @@ class BokehPlotter:
         :return: None
         """
         self.points.append(points)
-        line_args = {'x': [x[0] for x in points],
-                     'y': [y[1] for y in points],
-                     }
+        line_args: dict[str, Any] = {'x': [x[0] for x in points],
+                                     'y': [y[1] for y in points],
+                                     }
         if legend_label:
             line_args['legend_label'] = legend_label
         if line_color:
@@ -194,8 +195,8 @@ class BokehPlotter:
         """
         show(self._plot)
 
-    def __add_lines(self, points: Union[Sequence[tuple[int, float]],
-                                        Sequence[Sequence[tuple[int, float]]]]) -> None:
+    def __add_lines(self, points: Union[Sequence[tuple[Union[int, float], Union[int, float]]],
+                                        Sequence[Sequence[tuple[Union[int, float], Union[int, float]]]]]) -> None:
         """
         Parse passed in points into plot lines, multiple times if data is a
         series of lists of points.
