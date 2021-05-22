@@ -94,8 +94,6 @@ class BokehPlotter:
         if points:
             self.__add_lines(points)
 
-        self.plotted = None
-
     @property
     def title(self):
         return self._plot.title
