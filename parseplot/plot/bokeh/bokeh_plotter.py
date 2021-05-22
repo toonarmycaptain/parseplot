@@ -192,7 +192,7 @@ class BokehPlotter:
         """
         Shows plot in default browser.
         """
-        show(self.plot)
+        show(self._plot)
 
     def __add_lines(self, points: Union[Sequence[tuple[int, float]],
                                         Sequence[Sequence[tuple[int, float]]]]) -> None:
