@@ -51,6 +51,27 @@ class BokehPlotter:
 
         points must be a sequence, or sequence of sequences of of x,y tuples of int or float.
 
+        Plots may be constructed via the class constructor:
+            >>> b = BokehPlotter(title="Test plot",
+            >>>                  x_axis_label='x axis',
+            >>>                  y_axis_label='vertical axis',
+            >>>                  x_axis_location=0,
+            >>>                  y_axis_location=0,
+            >>>                  points=[[(x / 10, (x / 10) ** 2 - 4) for x in range(-50, 60)],
+            >>>                          [(x / 10, (x / 10) ** 3) for x in range(-30, 40)],
+            >>>                          [(x, x + 10) for x in range(-15, 16)]
+            >>>                          ])
+
+        Or procedurally:
+            >>> b = BokehPlotter(title="Test_plot")
+            >>> b.x_axis_label = 'x axis'
+            >>> b.y_axis_label = 'y axis'
+            >>> b.x_axis_location, b.y_axis_location = (0, 0)
+            >>> b.add_line([(x / 10, (x / 10) ** 2 - 4) for x in range(-50, 60)])
+            >>> b.add_line([(x / 10, (x / 10) ** 3) for x in range(-30, 40)])
+            >>> b.add_line([(x, x + 10) for x in range(-15, 16)])
+
+
         :param points: Union[Sequence[tuple[int, float]],
                                Sequence[Sequence[tuple[int, float]]]]
 
@@ -61,23 +82,59 @@ class BokehPlotter:
         :param y_axis_location: int location of y-axis (in terms of x-axis)
         :return: None
         """
+        self._plot: figure = figure()
+
         self.title: Optional[str] = title
         self.x_axis_label: Optional[str] = x_axis_label
         self.y_axis_label: Optional[str] = y_axis_label
         self.x_axis_location: Optional[Union[int, float]] = x_axis_location
         self.y_axis_location: Optional[Union[int, float]] = y_axis_location
 
-        self._plot: figure = figure(title=self.title,
-                                    x_axis_label=x_axis_label,
-                                    y_axis_label=self.y_axis_label)
-        self._plot.xaxis.fixed_location = self.x_axis_location
-        self._plot.yaxis.fixed_location = self.y_axis_location
-
         self.points: list[Sequence[tuple[Union[int, float], Union[int, float]]]] = []
         if points:
             self.__add_lines(points)
 
         self.plotted = None
+
+    @property
+    def title(self):
+        return self._plot.title
+
+    @title.setter
+    def title(self, new_title):
+        self._plot.title = new_title
+
+    @property
+    def x_axis_label(self):
+        return self._plot.xaxis.axis_label
+
+    @x_axis_label.setter
+    def x_axis_label(self, new_x_axis_label):
+        self._plot.xaxis.axis_label = new_x_axis_label
+
+    @property
+    def y_axis_label(self):
+        return self._plot.yaxis.axis_label
+
+    @y_axis_label.setter
+    def y_axis_label(self, new_y_axis_label):
+        self._plot.yaxis.axis_label = new_y_axis_label
+
+    @property
+    def x_axis_location(self):
+        return self._plot.xaxis.fixed_location
+
+    @x_axis_location.setter
+    def x_axis_location(self, new_x_axis_location):
+        self._plot.xaxis.fixed_location = new_x_axis_location
+
+    @property
+    def y_axis_location(self):
+        return self._plot.yaxis.fixed_location
+
+    @y_axis_location.setter
+    def y_axis_location(self, new_y_axis_location):
+        self._plot.yaxis.fixed_location = new_y_axis_location
 
     def add_line(self,
                  points: Sequence[tuple[Union[int, float], Union[int, float]]],
