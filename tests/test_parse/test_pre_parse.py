@@ -1,7 +1,7 @@
 """Test pre_parse.py"""
 import pytest
 
-from parseplot.parse.pre_parse import pre_parse_translation
+from src.parseplot.parse.pre_parse import pre_parse_translation
 
 
 class TestPreParseTranslation:
