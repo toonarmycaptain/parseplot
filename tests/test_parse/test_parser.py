@@ -1,9 +1,9 @@
 """Test parser.py"""
 import pytest
 
-from parseplot.parse import parser
+from src.parseplot.parse import parser
 
-from parseplot.parse import Parser
+from src.parseplot import Parser
 
 
 def test__init__(monkeypatch):
