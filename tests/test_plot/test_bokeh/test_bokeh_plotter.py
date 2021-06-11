@@ -1,6 +1,6 @@
 import pytest
 
-from parseplot.plot.bokeh.bokeh_plotter import BokehPlotter
+from src.parseplot.plot.bokeh.bokeh_plotter import BokehPlotter
 
 
 @pytest.mark.parametrize(
