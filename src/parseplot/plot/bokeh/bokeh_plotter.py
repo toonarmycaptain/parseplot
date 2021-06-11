@@ -259,13 +259,13 @@ class BokehPlotter:
         :param points:
         :return:
         """
-        try:
-            points[0][0][0]  # Will throw an exception if only one sequence of xy tuples.
-            # Multiple lists of points.
-            for line in points:
+        if isinstance(points[0][0], Sequence):  # Multiple lists of points.
+            lines: Sequence[Sequence[tuple[Union[int, float], Union[int, float]]]] = points  # type: ignore
+            for line in lines:
                 self.add_line(line)
-        except TypeError:  # Single list:
-            self.add_line(points)
+        else:  # Single list:
+            line: Sequence[tuple[Union[int, float], Union[int, float]]] = points  # type: ignore
+            self.add_line(line)
 
     @staticmethod
     def __initialise_webdriver() -> webdriver.Firefox:
