@@ -17,6 +17,8 @@ from bokeh.io import (export_png,
                       )
 from bokeh.plotting import figure
 
+from src.parseplot.util.filepath_helpers import ensure_extension
+
 if TYPE_CHECKING:
     from selenium import webdriver
 
@@ -194,10 +196,7 @@ class BokehPlotter:
         """
         extension = '.html'
 
-        if isinstance(filepath, Path):
-            filepath = filepath.with_suffix(extension)
-        elif not filepath.endswith(extension):  # Path does not have .endswith
-            filepath += extension
+        filepath = ensure_extension(filepath, extension)
         return save(self._plot, filename=filepath)
 
     def save_as_png(self, filepath: Union[str, Path]) -> Union[str, Path]:
@@ -214,10 +213,7 @@ class BokehPlotter:
         """
         extension = '.png'
 
-        if isinstance(filepath, Path):
-            filepath = filepath.with_suffix(extension)
-        elif not filepath.endswith(extension):  # Path does not have .endswith
-            filepath += extension
+        filepath = ensure_extension(filepath, extension)
         export_png(self._plot, filename=filepath, webdriver=self.__initialise_webdriver())
 
         return filepath
@@ -236,10 +232,7 @@ class BokehPlotter:
         """
         extension = '.svg'
 
-        if isinstance(filepath, Path):
-            filepath = filepath.with_suffix(extension)
-        elif not filepath.endswith(extension):  # Path does not have .endswith
-            filepath += extension
+        filepath = ensure_extension(filepath, extension)
         export_svg(self._plot, filename=filepath, webdriver=self.__initialise_webdriver())
 
         return filepath
