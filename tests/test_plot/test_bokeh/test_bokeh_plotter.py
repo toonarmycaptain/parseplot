@@ -1,5 +1,6 @@
 import pytest
 
+from src.parseplot.plot.bokeh import bokeh_plotter
 from src.parseplot.plot.bokeh.bokeh_plotter import BokehPlotter
 
 
@@ -96,3 +97,41 @@ class TestPlot:
 
         test_plotter.plot(points)
         assert add_line_called == bool(points)
+
+
+class TestPlotPILImagePNG:
+    def test_plot_PIL_Image_png_mocked(self, monkeypatch):
+        test_plotter = BokehPlotter()
+
+        # Mock plot
+        test__plot = 'a test plot'
+        test_plotter._plot = test__plot
+
+        # Mock get_screenshot_as_png
+        mocked_get_screenshot_as_png = False
+        mock_get_screenshot_as_png_return = "mocked_get_screenshot_as_png_called"
+
+        def mock_get_screenshot_as_png(*args, **kwargs):
+            nonlocal mocked_get_screenshot_as_png
+            mocked_get_screenshot_as_png = True
+            assert test_plotter._plot in args
+            assert kwargs['driver'] == test_plotter._BokehPlotter__initialise_webdriver()
+            return mock_get_screenshot_as_png_return
+
+        monkeypatch.setattr(bokeh_plotter, 'get_screenshot_as_png', mock_get_screenshot_as_png)
+
+        # Mock __initialise_webdriver
+        mocked__initialise_webdriver_called = False
+        mock___initialise_webdriver_return = 'mocked__initialise_webdriver_called'
+
+        def mock___initialise_webdriver():
+            nonlocal mocked__initialise_webdriver_called
+            mocked__initialise_webdriver_called = True
+            return mock___initialise_webdriver_return
+
+        test_plotter._BokehPlotter__initialise_webdriver = mock___initialise_webdriver
+
+        assert test_plotter.plot_PIL_Image_png() == mock_get_screenshot_as_png_return
+        # Ensure expected calls
+        assert mocked_get_screenshot_as_png
+        assert mocked__initialise_webdriver_called
