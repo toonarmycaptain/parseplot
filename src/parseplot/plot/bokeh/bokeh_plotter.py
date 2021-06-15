@@ -143,8 +143,8 @@ class BokehPlotter:
         """
         Add a line to the class' plot.
 
-        :param points: tio
-        :param legend_label: Sequence[tuple[int, float]]
+        :param points: Sequence[tuple[int, float]]
+        :param legend_label: str
         :param line_color: str
         :param line_width: str
         :return: None
