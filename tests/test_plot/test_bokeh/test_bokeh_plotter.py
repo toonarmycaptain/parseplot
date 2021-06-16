@@ -138,3 +138,175 @@ class TestPlotPILImagePNG:
         # Ensure expected calls
         assert mocked_get_screenshot_as_png
         assert mocked__initialise_webdriver_called
+
+
+class TestSaveHtmlToFile:
+    @pytest.mark.parametrize(
+        'filepath, used_filepath',
+        [  # str
+            ('some_filename', 'some_filename.html'),  # filename w/o ext
+            ('some_filename.html', 'some_filename.html'),  # filename w/correct ext
+            ('some_filename.other_ext', 'some_filename.other_ext.html'),  # filename w/wrong ext
+            pytest.param('some_filename.bad', 'some_filename.worse',
+                         marks=pytest.mark.xfail(reason="Sanity check; wrong output.")),
+            # pathlib.Path
+            (Path('some_filename'), Path('some_filename.html')),  # filename w/o ext
+            (Path('some_filename.html'), Path('some_filename.html')),  # filename w/correct ext
+            (Path('some_filename.other_ext'), Path('some_filename.other_ext.html')),  # filename w/wrong ext
+            pytest.param(Path('some_filename.bad'), Path('some_filename.worse'),
+                         marks=pytest.mark.xfail(reason="Sanity check; wrong output.")),
+        ])
+    def test_save_html_to_file(self, monkeypatch, filepath, used_filepath):
+        test_plotter = BokehPlotter()
+        test_filepath = filepath
+
+        # mock test_plotter._plot
+        test__plot = 'a test plot'
+        test_plotter._plot = test__plot
+
+        # Mock bokeh.io.save
+        mocked_save_called = False
+
+        def mock_save(plot, filename):
+            nonlocal mocked_save_called
+            mocked_save_called = True
+            assert plot is test__plot
+            assert filename == used_filepath
+            return filename
+
+        monkeypatch.setattr(bokeh_plotter, 'save', mock_save)
+
+        assert test_plotter.save_html_to_file(test_filepath) == used_filepath
+
+        assert mocked_save_called
+
+
+class TestSaveAsPng:
+    @pytest.mark.parametrize(
+        'filepath, used_filepath',
+        [  # str
+            ('some_filename', 'some_filename.png'),  # filename w/o ext
+            ('some_filename.png', 'some_filename.png'),  # filename w/correct ext
+            ('some_filename.other_ext', 'some_filename.other_ext.png'),  # filename w/wrong ext
+            pytest.param('some_filename.bad', 'some_filename.worse',
+                         marks=pytest.mark.xfail(reason="Sanity check; wrong output.")),
+            # pathlib.Path
+            (Path('some_filename'), Path('some_filename.png')),  # filename w/o ext
+            (Path('some_filename.png'), Path('some_filename.png')),  # filename w/correct ext
+            (Path('some_filename.other_ext'), Path('some_filename.other_ext.png')),  # filename w/wrong ext
+            pytest.param(Path('some_filename.bad'), Path('some_filename.worse'),
+                         marks=pytest.mark.xfail(reason="Sanity check; wrong output.")),
+        ])
+    def test_save_as_png(self, monkeypatch, filepath, used_filepath):
+        test_plotter = BokehPlotter()
+        test_filepath = filepath
+
+        # mock test_plotter._plot
+        test__plot = 'a test plot'
+        test_plotter._plot = test__plot
+
+        # Mock __initialise_webdriver
+        mocked__initialise_webdriver_called = False
+        mock___initialise_webdriver_return = 'mocked__initialise_webdriver_called'
+
+        def mock___initialise_webdriver():
+            nonlocal mocked__initialise_webdriver_called
+            mocked__initialise_webdriver_called = True
+            return mock___initialise_webdriver_return
+
+        test_plotter._BokehPlotter__initialise_webdriver = mock___initialise_webdriver
+
+        # Mock bokeh.io.save
+        mocked_export_png = False
+
+        def mock_export_png(plot, filename, webdriver):
+            nonlocal mocked_export_png
+            mocked_export_png = True
+            assert plot is test__plot
+            assert filename == used_filepath
+            assert webdriver == mock___initialise_webdriver_return
+            return filename
+
+        monkeypatch.setattr(bokeh_plotter, 'export_png', mock_export_png)
+
+        assert test_plotter.save_as_png(test_filepath) == used_filepath
+
+        assert mocked_export_png
+        assert mocked__initialise_webdriver_called
+
+
+class TestSaveAsSvg:
+    @pytest.mark.parametrize(
+        'filepath, used_filepath',
+        [  # str
+            ('some_filename', 'some_filename.svg'),  # filename w/o ext
+            ('some_filename.svg', 'some_filename.svg'),  # filename w/correct ext
+            ('some_filename.other_ext', 'some_filename.other_ext.svg'),  # filename w/wrong ext
+            pytest.param('some_filename.bad', 'some_filename.worse',
+                         marks=pytest.mark.xfail(reason="Sanity check; wrong output.")),
+            # pathlib.Path
+            (Path('some_filename'), Path('some_filename.svg')),  # filename w/o ext
+            (Path('some_filename.svg'), Path('some_filename.svg')),  # filename w/correct ext
+            (Path('some_filename.other_ext'), Path('some_filename.other_ext.svg')),  # filename w/wrong ext
+            pytest.param(Path('some_filename.bad'), Path('some_filename.worse'),
+                         marks=pytest.mark.xfail(reason="Sanity check; wrong output.")),
+        ])
+    def test_save_as_svg(self, monkeypatch, filepath, used_filepath):
+        test_plotter = BokehPlotter()
+        test_filepath = filepath
+
+        # mock test_plotter._plot
+        test__plot = 'a test plot'
+        test_plotter._plot = test__plot
+
+        # Mock __initialise_webdriver
+        mocked__initialise_webdriver_called = False
+        mock___initialise_webdriver_return = 'mocked__initialise_webdriver_called'
+
+        def mock___initialise_webdriver():
+            nonlocal mocked__initialise_webdriver_called
+            mocked__initialise_webdriver_called = True
+            return mock___initialise_webdriver_return
+
+        test_plotter._BokehPlotter__initialise_webdriver = mock___initialise_webdriver
+
+        # Mock bokeh.io.save
+        mocked_export_svg = False
+
+        def mock_export_svg(plot, filename, webdriver):
+            nonlocal mocked_export_svg
+            mocked_export_svg = True
+            assert plot is test__plot
+            assert filename == used_filepath
+            assert webdriver == mock___initialise_webdriver_return
+            return filename
+
+        monkeypatch.setattr(bokeh_plotter, 'export_svg', mock_export_svg)
+
+        assert test_plotter.save_as_svg(test_filepath) == used_filepath
+
+        assert mocked_export_svg
+        assert mocked__initialise_webdriver_called
+
+
+class TestShowInBrowser:
+    def test_show_in_browser(self, monkeypatch):
+        test_plotter = BokehPlotter()
+
+        # Mock ._plot
+        test__plot = 'a dummy plot'
+        test_plotter._plot = test__plot
+
+        # mock bokeh.io.show
+        mocked_show_called = False
+
+        def mock_show(plot):
+            nonlocal mocked_show_called
+            mocked_show_called = True
+            assert plot == test__plot
+
+        monkeypatch.setattr(bokeh_plotter, 'show', mock_show)
+
+        assert test_plotter.show_in_browser() is None
+
+        assert mocked_show_called
