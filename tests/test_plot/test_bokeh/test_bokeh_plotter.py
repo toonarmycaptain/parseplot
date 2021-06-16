@@ -1,3 +1,6 @@
+"""Test bokeh_plotter.py"""
+from pathlib import Path
+
 import pytest
 
 from src.parseplot.plot.bokeh import bokeh_plotter
