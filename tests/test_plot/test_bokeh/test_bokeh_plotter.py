@@ -310,3 +310,33 @@ class TestShowInBrowser:
         assert test_plotter.show_in_browser() is None
 
         assert mocked_show_called
+
+
+class TestAddLines:
+    @pytest.mark.parametrize(
+        'lines, number_of_lines',
+        [([(x, x + 1) for x in range(5)], 1),  # single line of points
+         ([[(x, x + 1) for x in range(5)]], 1),  # Single line nested as if multiple.
+         ([[(x, x + 1) for x in range(5)], [(x, x + 1) for x in range(10)]], 2),  # multiple lines
+         (['one', 'two', 'three', 'four', 'five'], 5),
+         pytest.param([[(x, x + 1) for x in range(5)], [(x, x + 1) for x in range(10)]], 1,
+                      marks=pytest.mark.xfail(reason="Sanity check; wrong output.")),
+         pytest.param([(x, x + 1) for x in range(5)], 2,
+                      marks=pytest.mark.xfail(reason="Sanity check; wrong output.")),
+         pytest.param(['one', 'two', 'three'], 7,
+                      marks=pytest.mark.xfail(reason="Sanity check; wrong output.")),
+         ])
+    def test___add_lines(self, lines, number_of_lines):
+        test_plotter = BokehPlotter()
+
+        # Mock .add_line
+        mocked_add_line_calls = []
+
+        def mock_add_line(points):
+            nonlocal mocked_add_line_calls
+            mocked_add_line_calls.append(points)
+
+        test_plotter.add_line = mock_add_line
+
+        assert test_plotter._BokehPlotter__add_lines(lines) is None
+        assert len(mocked_add_line_calls) == number_of_lines
