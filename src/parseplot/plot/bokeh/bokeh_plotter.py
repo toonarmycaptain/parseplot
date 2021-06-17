@@ -266,6 +266,7 @@ class BokehPlotter:
         Returns initialised Firefox webdriver.
 
         Very slow.
+        Requires Firefox to be installed.
 
         :return: webdriver.Firefox
         """
