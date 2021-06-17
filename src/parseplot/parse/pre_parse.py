@@ -1,7 +1,7 @@
 """Pre parse string cleansing"""
 
 
-def pre_parse_translation(initial_string: str) -> str:
+def pre_parse_translate(initial_string: str) -> str:
     """
     Takes unparsable syntax and replaces with parser-accepted equivalent
 

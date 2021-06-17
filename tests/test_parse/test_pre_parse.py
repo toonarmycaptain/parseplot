@@ -1,7 +1,7 @@
 """Test pre_parse.py"""
 import pytest
 
-from src.parseplot.parse.pre_parse import pre_parse_translation
+from src.parseplot.parse.pre_parse import pre_parse_translate
 
 
 class TestPreParseTranslation:
@@ -19,4 +19,4 @@ class TestPreParseTranslation:
         ],
     )
     def test_pre_parse_translation(self, input_function, output_function):
-        assert pre_parse_translation(input_function) == output_function
+        assert pre_parse_translate(input_function) == output_function

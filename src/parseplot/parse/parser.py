@@ -1,6 +1,6 @@
 from plusminus import ArithmeticParser
 
-from .pre_parse import pre_parse_translation
+from .pre_parse import pre_parse_translate
 
 
 class Parser:
@@ -10,7 +10,7 @@ class Parser:
 
     def __init__(self, function):
         self.function = function
-        self._function = pre_parse_translation(function)
+        self._function = pre_parse_translate(function)
         self._parser = ArithmeticParser()
 
     def plot(self, x_min: int = -500, x_max: int = 500) -> list[tuple[int, float]]:
