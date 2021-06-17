@@ -6,7 +6,7 @@ from src.parseplot.parse.pre_parse import pre_parse_translate
 
 class TestPreParseTranslation:
     @pytest.mark.parametrize(
-        "input_function, output_function",
+        "input_expression, output_expression",
         [
             ("x**2+4", "x**2+4"),
             ("x^2+4", "x**2+4"),  # ^ power replaced by **
@@ -18,5 +18,5 @@ class TestPreParseTranslation:
             ),
         ],
     )
-    def test_pre_parse_translation(self, input_function, output_function):
-        assert pre_parse_translate(input_function) == output_function
+    def test_pre_parse_translation(self, input_expression, output_expression):
+        assert pre_parse_translate(input_expression) == output_expression
