@@ -10,8 +10,25 @@ class Parser:
 
     def __init__(self, expression: str):
         self.expression = expression
-        self._expression = pre_parse_translate(expression)
         self._parser = ArithmeticParser()
+
+    @property
+    def expression(self):
+        """Returns the given expression."""
+        return self._readable_expression
+
+    @expression.setter
+    def expression(self, new_expression: str):
+        """
+        Reassigns ._readable_expression, ._expression
+
+        Internal representation ._expression set to validated/translated form.
+
+        :param new_expression: str
+        :return: None
+        """
+        self._readable_expression = new_expression
+        self._expression = pre_parse_translate(new_expression)
 
     def plot(self, x_min: int = -500, x_max: int = 500) -> list[tuple[int, float]]:
         """

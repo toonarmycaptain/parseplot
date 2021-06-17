@@ -7,17 +7,20 @@ from src.parseplot import Parser
 
 
 def test__init__(monkeypatch):
+    test_expression = "my test expression"
+    test_translated_expression = test_expression + " translated"
+
     def mocked_pre_parse_translate(expression):
-        return expression + " translated"
+        return test_translated_expression
 
     monkeypatch.setattr(parser, "pre_parse_translate", mocked_pre_parse_translate)
-
-    test_expression = "my test expression"
 
     test_parser = Parser(test_expression)
 
     assert test_parser.expression == test_expression
-    assert test_parser._expression == mocked_pre_parse_translate(test_expression)
+    assert test_parser._readable_expression == test_expression
+    assert test_parser._expression == test_translated_expression
+
 
 
 @pytest.mark.parametrize(
