@@ -340,3 +340,36 @@ class TestAddLines:
 
         assert test_plotter._BokehPlotter__add_lines(lines) is None
         assert len(mocked_add_line_calls) == number_of_lines
+
+
+class TestInitialiseWebdriver:
+    def test___initialise_webdriver(self, monkeypatch):
+        testing_plotter = BokehPlotter()
+        test_initialised_driver = 'initialised driver'
+
+        # mock geckodriver.install
+        mocked_geckodriver_install_called = False
+
+        def mock_install():
+            nonlocal mocked_geckodriver_install_called
+            mocked_geckodriver_install_called = True
+
+        import geckodriver_autoinstaller
+        monkeypatch.setattr(geckodriver_autoinstaller, 'install', mock_install)
+
+        # mock webdriver.Firefox
+        mocked_webdriver_Firefox_called = False
+
+        def mock_Firefox(options):
+            nonlocal mocked_webdriver_Firefox_called
+            mocked_webdriver_Firefox_called = True
+            assert options
+            return test_initialised_driver
+
+        from selenium import webdriver
+        monkeypatch.setattr(webdriver, 'Firefox', mock_Firefox)
+
+        assert testing_plotter._BokehPlotter__initialise_webdriver() == test_initialised_driver
+
+        assert mocked_geckodriver_install_called
+        assert mocked_webdriver_Firefox_called
