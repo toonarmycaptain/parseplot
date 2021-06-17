@@ -276,5 +276,4 @@ class BokehPlotter:
         geckodriver_autoinstaller.install()  # In case driver not installed.
         options = Options()
         options.headless = True
-        driver = webdriver.Firefox(options=options)
-        return driver
+        return webdriver.Firefox(options=options)
