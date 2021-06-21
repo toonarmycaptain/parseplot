@@ -1,3 +1,5 @@
+from typing import Union, Generator
+
 from plusminus import ArithmeticParser
 
 from .pre_parse import pre_parse_translate
@@ -30,19 +32,66 @@ class Parser:
         self._readable_expression = new_expression
         self._expression = pre_parse_translate(new_expression)
 
-    def plot(self, x_min: int = -500, x_max: int = 500) -> list[tuple[int, float]]:
+    def plot(self, x_min: int = -500,
+             x_max: int = 500,
+             n: int = None,
+             smooth: bool = False,
+             very_smooth: bool = False
+             ) -> list[tuple[float, Union[int, float]]]:
         """
         Plot expression.
 
+        Generates points.
+        Configurable min/max x, defaulting to -500/500.
+        Configurable number of points.
+        Smooth/very_smooth option: produced specified domain with many/very many points.
+
         :param x_min: int
         :param x_max: int
+        :param n: int
+        :param smooth: bool
+        :param very_smooth: bool
         :return: list[tuple]
         """
+        if n:
+            step = (x_max - x_min) / (n - 1)
+        elif smooth:
+            step = (x_max - x_min) / (500 - 1)
+        elif very_smooth:
+            step = (x_max - x_min) / (5000 - 1)
+        else:
+            step = 1
+        domain = self.float_range(x_min, x_max + step, step)
+
         self._parser.evaluate("x=0")
 
-        xy_points: list[tuple[int, float]] = []
-        for x in range(x_min, x_max + 1):
-            self._parser.evaluate(f"x={x}")
-            xy = (x, self._parser.evaluate(self._expression))
-            xy_points.append(xy)
+        xy_points = [(x, self._get_y_coord(x)) for x in domain]
         return xy_points
+
+    def _get_y_coord(self, x: Union[int, float]) -> Union[int, float]:
+        self._parser.evaluate(f"x={x}")
+        return self._parser.evaluate(self._expression)
+
+    @staticmethod
+    def float_range(start: Union[int, float],
+                    end: Union[int, float],
+                    step: Union[int, float] = 1.0
+                    ) -> Generator[float, None, None]:
+        """
+        Range for floats.
+
+        :param start:: Union[int, float]
+        :param end:: Union[int, float]
+        :param step:: Union[int, float]
+        :return:
+        """
+        i = 0.0
+        x = float(start)
+        x0 = x
+        half_step = step / 2.0
+        yield x
+        while x + half_step < end:
+            i += 1.0
+            x = x0 + i * step  # Multiplication avoids adding floating point errors.
+            if x < end:
+                yield x
