@@ -47,11 +47,14 @@ class Parser:
         Domain x_min/x_max, defaulting to -500/500.
 
         n - number of points to plot, spread evenly over the domain.
-        Defaults to the magnitude of the domain eg ~abs(x_max - x_min).
+        Defaults to the magnitude of the domain abs(x_max - x_min) + 1
+        NB if n=0 arg is ignored.
 
         smooth/very_smooth: plot given domain with many/very many points
         smooth: 500
         very_smooth 5000
+        NB if n>0 is passed, smooth/very_smooth are ignored, with smooth
+        evaluated before very_smooth and taking precedence.
 
         :param x_min: int
         :param x_max: int
