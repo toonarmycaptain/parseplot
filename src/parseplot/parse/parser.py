@@ -24,7 +24,8 @@ class Parser:
         """
         Reassigns ._readable_expression, ._expression
 
-        Internal representation ._expression set to validated/translated form.
+        Internal representation ._expression set to validated/translated
+        form.
 
         :param new_expression: str
         :return: None
@@ -42,16 +43,22 @@ class Parser:
         Plot expression.
 
         Generates points.
-        Configurable min/max x, defaulting to -500/500.
-        Configurable number of points.
-        Smooth/very_smooth option: produced specified domain with many/very many points.
+
+        Domain x_min/x_max, defaulting to -500/500.
+
+        n - number of points to plot, spread evenly over the domain.
+        Defaults to the magnitude of the domain eg ~abs(x_max - x_min).
+
+        smooth/very_smooth: plot given domain with many/very many points
+        smooth: 500
+        very_smooth 5000
 
         :param x_min: int
         :param x_max: int
         :param n: int
         :param smooth: bool
         :param very_smooth: bool
-        :return: list[tuple]
+        :return: list[tuple[float, Union[int, float]]]
         """
         if n:
             step = (x_max - x_min) / (n - 1)
@@ -83,7 +90,7 @@ class Parser:
         :param start:: Union[int, float]
         :param end:: Union[int, float]
         :param step:: Union[int, float]
-        :return:
+        :return: Generator[float, None, None]
         """
         i = 0.0
         x = float(start)
