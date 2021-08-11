@@ -20,7 +20,7 @@ from bokeh.plotting import figure
 from src.parseplot.util.filepath_helpers import ensure_extension
 
 if TYPE_CHECKING:
-    from selenium import webdriver
+    from selenium import webdriver  # pragma: no cover
 
 
 class BokehPlotter:

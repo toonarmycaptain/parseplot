@@ -22,7 +22,6 @@ def test__init__(monkeypatch):
     assert test_parser._expression == test_translated_expression
 
 
-
 @pytest.mark.parametrize(
     "test_expression, plot_range, points",
     [('3', (-2, 2), [(-2, 3), (-1, 3), (0, 3), (1, 3), (2, 3)]),  # Constant.
@@ -39,3 +38,46 @@ def test__init__(monkeypatch):
 def test_plot(test_expression, plot_range, points):
     test_parser = Parser(test_expression)
     assert test_parser.plot(*plot_range) == points
+
+
+def test_plot_default_args():
+    x_min = -500
+    x_max = 500
+
+    test_parser = Parser('x**2')
+    points = test_parser.plot()
+
+    assert x_min == points[0][0]
+    assert x_max == points[-1][0]
+    assert 500 == points[1000][0]  # ie 1001st point x value is x_max.
+    assert len(points) == (x_max - x_min) + 1
+
+
+@pytest.mark.parametrize(
+    "test_expression, plot_args, num_points",
+    [("x**2+4", {'x_min': -5, 'x_max': 5}, 11),  # default 1 per min-max + 1
+     pytest.param("x**2+4", {'x_min': -5, 'x_max': 5}, 27,
+                  marks=pytest.mark.xfail(reason="Wrong number of points, test should fail.")),
+     ("x**2+4", {'x_min': 10, 'x_max': 20}, 11),
+     # n points
+     ("x**2+4", {'x_min': -5, 'x_max': 5}, 11),  # default 1 per min-max + 1
+     pytest.param("x**2+4", {'x_min': -5, 'x_max': 5}, 27,
+                  marks=pytest.mark.xfail(reason="Wrong number of points, test should fail.")),
+     ("x**2+4", {'x_min': 10, 'x_max': 25}, 16),
+     # n=0 is ignored
+     ("x**2+4", {'x_min': -5, 'x_max': 5, 'n': 0}, 11),
+     pytest.param("x**2+4", {'x_min': -5, 'x_max': 5, 'n': 0}, 0,
+                  marks=pytest.mark.xfail(reason="n=0 not ignored, test should fail.")),
+     # smooth
+     ("x**2+4", {'x_min': -5, 'x_max': 5, 'smooth': True}, 500),
+     # very smooth
+     ("x**2+4", {'x_min': -5, 'x_max': 5, 'very_smooth': True}, 5000),
+     # n taking precedence over smooth/very_smooth
+     ("x**2+4", {'x_min': -5, 'x_max': 5, 'n': 5, 'smooth': True}, 5),
+     ("x**2+4", {'x_min': -5, 'x_max': 5, 'n': 5, 'very_smooth': True}, 5),
+     # smooth taking precedence over very_smooth
+     ("x**2+4", {'x_min': -5, 'x_max': 5, 'smooth': True, 'very_smooth': True}, 500),
+     ])
+def test_plot_n_smooth_very_smooth_args(test_expression, plot_args, num_points):
+    test_parser = Parser(test_expression)
+    assert len(test_parser.plot(**plot_args)) == num_points
