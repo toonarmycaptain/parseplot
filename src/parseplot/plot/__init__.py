@@ -1,5 +1,5 @@
 """Plot module"""
-from .bokeh.bokeh_plotter import BokehPlotter
+from .bokeh import BokehPlotter
 
 __all__ = [
     "BokehPlotter",
