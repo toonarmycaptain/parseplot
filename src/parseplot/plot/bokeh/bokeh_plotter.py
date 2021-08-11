@@ -39,19 +39,22 @@ class BokehPlotter:
         """
         Object wrapping bokeh plotting functionality.
 
-        May be initialised with a list of points, or a list of lists of points,
+        May be initialised with a list of points, or a list of lists of
+        points,
         as well as plot data such as title, axis labels.
 
-        Plot data other than a list of points must be passed via kw arguments,
-        to allow for BokehPlotter([list of points])
-                  or BokehPlotter(title='title,
-                                  x_axis_label: str = None,
-                                  y_axis_label: str = None,
-                                  points=[list of points])
-                  or BokehPlotter[[list of points], title='title')
+        Plot data other than a list of points must be passed via kw
+        arguments,to allow for BokehPlotter([list of points])
+                            or BokehPlotter(title='title,
+                                            x_axis_label: str = None,
+                                            y_axis_label: str = None,
+                                            points=[list of points])
+                            or BokehPlotter([list of points],
+                                            title='title')
         calling formats.
 
-        points must be a sequence, or sequence of sequences of of x,y tuples of int or float.
+        points must be a sequence, or sequence of sequences of of x,y
+        tuples of int or float.
 
         Plots may be constructed via the class constructor:
             >>> b = BokehPlotter(title="Test plot",
@@ -80,8 +83,8 @@ class BokehPlotter:
         :param title: str title for chart
         :param x_axis_label: str label for x axis
         :param y_axis_label: str label for y axis
-        :param x_axis_location: int location of x-axis (in terms of y-axis)
-        :param y_axis_location: int location of y-axis (in terms of x-axis)
+        :param x_axis_location: int location of x-axis (on y-axis)
+        :param y_axis_location: int location of y-axis (on x-axis)
         :return: None
         """
         self._plot: figure = figure()
@@ -183,16 +186,18 @@ class BokehPlotter:
 
         :return: PIL.Image object
         """
-        return get_screenshot_as_png(self._plot, driver=self.__initialise_webdriver())
+        return get_screenshot_as_png(self._plot,
+                                     driver=self.__initialise_webdriver())
 
-    def save_html_to_file(self, filepath: Union[str, Path]) -> Union[str, Path]:
+    def save_html_to_file(self, filepath: Union[str, Path]
+                          ) -> Union[str, Path]:
         """
         Save the html plot to the given filepath.
 
         Appends .html extension if not given.
 
         :param filepath: str
-        :return: str
+        :return: str|Path
         """
         extension = '.html'
 
@@ -205,11 +210,11 @@ class BokehPlotter:
 
         Appends .png extension if not given.
 
-        export_png returns a list of strings, this taking first element returns
-        just the filepath
+        export_png returns a list of strings, this taking first element
+        returns just the filepath
 
-        :param filepath:
-        :return:
+        :param filepath: Path|str
+        :return: Path|str
         """
         extension = '.png'
 
@@ -224,11 +229,11 @@ class BokehPlotter:
 
         Appends .svg extension if not given.
 
-        export_svg returns a list of strings, this taking first element returns
-        just the filepath
+        export_svg returns a list of strings, this taking first element
+        returns just the filepath
 
-        :param filepath:
-        :return:
+        :param filepath: Path|str
+        :return: Path|str
         """
         extension = '.svg'
 
@@ -240,17 +245,20 @@ class BokehPlotter:
     def show_in_browser(self) -> None:
         """
         Shows plot in default browser.
+
+        :return: None
         """
         show(self._plot)
 
     def __add_lines(self, points: Union[Sequence[tuple[Union[int, float], Union[int, float]]],
                                         Sequence[Sequence[tuple[Union[int, float], Union[int, float]]]]]) -> None:
         """
-        Parse passed in points into plot lines, multiple times if data is a
-        series of lists of points.
+        Parse passed in points into plot lines, multiple times if data
+        is a series of lists of points.
 
-        :param points:
-        :return:
+        :param points: Union[Sequence[tuple[Union[int, float], Union[int, float]]],
+                             Sequence[Sequence[tuple[Union[int, float], Union[int, float]]]]]
+        :return: None
         """
         if isinstance(points[0][0], Sequence):  # Multiple lists of points.
             lines: Sequence[Sequence[tuple[Union[int, float], Union[int, float]]]] = points  # type: ignore
