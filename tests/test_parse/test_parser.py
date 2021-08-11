@@ -70,23 +70,13 @@ def test_plot_default_args():
                   marks=pytest.mark.xfail(reason="n=0 not ignored, test should fail.")),
      # smooth
      ("x**2+4", {'x_min': -5, 'x_max': 5, 'smooth': True}, 500),
-     pytest.param("x**2+4", {'x_min': -5, 'x_max': 5, 'smooth': True}, 17,
-                  marks=pytest.mark.xfail(reason="Number of points = 500, test should fail.")),
      # very smooth
      ("x**2+4", {'x_min': -5, 'x_max': 5, 'very_smooth': True}, 5000),
-     pytest.param("x**2+4", {'x_min': -5, 'x_max': 5, 'very_smooth': True}, 17,
-                  marks=pytest.mark.xfail(reason="Number of points = 5k, test should fail.")),
      # n taking precedence over smooth/very_smooth
      ("x**2+4", {'x_min': -5, 'x_max': 5, 'n': 5, 'smooth': True}, 5),
-     pytest.param("x**2+4", {'x_min': -5, 'x_max': 5, 'n': 5, 'smooth': True}, 500,
-                  marks=pytest.mark.xfail(reason="n takes precedence, test should fail.")),
      ("x**2+4", {'x_min': -5, 'x_max': 5, 'n': 5, 'very_smooth': True}, 5),
-     pytest.param("x**2+4", {'x_min': -5, 'x_max': 5, 'n': 5, 'very_smooth': True}, 5000,
-                  marks=pytest.mark.xfail(reason="n takes precedence, test should fail.")),
      # smooth taking precedence over very_smooth
      ("x**2+4", {'x_min': -5, 'x_max': 5, 'smooth': True, 'very_smooth': True}, 500),
-     pytest.param("x**2+4", {'x_min': -5, 'x_max': 5, 'smooth': True, 'very_smooth': True}, 5000,
-                  marks=pytest.mark.xfail(reason="smooth took precedence, test should fail.")),
      ])
 def test_plot_n_smooth_very_smooth_args(test_expression, plot_args, num_points):
     test_parser = Parser(test_expression)
