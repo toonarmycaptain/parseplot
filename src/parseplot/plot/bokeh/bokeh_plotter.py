@@ -101,7 +101,7 @@ class BokehPlotter:
 
     @property
     def title(self):
-        return self._plot.title
+        return self._plot.title.text
 
     @title.setter
     def title(self, new_title):
