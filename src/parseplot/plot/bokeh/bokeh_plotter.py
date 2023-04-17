@@ -28,13 +28,13 @@ class BokehPlotter:
 
     def __init__(self,
                  points: Union[Sequence[tuple[Union[int, float], Union[int, float]]],
-                               Sequence[Sequence[tuple[Union[int, float], Union[int, float]]]]] = None,
+                 Sequence[Sequence[tuple[Union[int, float], Union[int, float]]]]]|None = None,
                  *,
-                 title: str = None,
-                 x_axis_label: str = None,
-                 y_axis_label: str = None,
-                 x_axis_location: Union[int, float] = None,
-                 y_axis_location: Union[int, float] = None,
+                 title: str|None = None,
+                 x_axis_label: str|None = None,
+                 y_axis_label: str|None = None,
+                 x_axis_location: Union[int, float]|None = None,
+                 y_axis_location: Union[int, float]|None = None,
                  ) -> None:
         """
         Object wrapping bokeh plotting functionality.
@@ -141,9 +141,9 @@ class BokehPlotter:
 
     def add_line(self,
                  points: Sequence[tuple[Union[int, float], Union[int, float]]],
-                 legend_label: str = None,
-                 line_color: str = None,
-                 line_width: int = None,
+                 legend_label: str|None = None,
+                 line_color: str|None = None,
+                 line_width: int|None = None,
                  ) -> None:
         """
         Add a line to the class' plot.
@@ -167,7 +167,7 @@ class BokehPlotter:
         self._plot.line(**line_args)
 
     def plot(self,
-             passed_points: Sequence[tuple[int, float]] = None,
+             passed_points: Sequence[tuple[int, float]]|None = None,
              ) -> None:
         """
         Show plot in browser, adding a line if points are passed.

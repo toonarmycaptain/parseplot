@@ -35,7 +35,7 @@ class Parser:
 
     def plot(self, x_min: int = -500,
              x_max: int = 500,
-             n: int = None,
+             n: int|None = None,
              smooth: bool = False,
              very_smooth: bool = False
              ) -> list[tuple[float, Union[int, float]]]:
