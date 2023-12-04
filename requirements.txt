@@ -1,4 +1,4 @@
-bokeh~=3.3.0
+bokeh~=3.3.2
 geckodriver-autoinstaller==0.1.0
 plusminus==0.7.0
 selenium==4.12.0
