@@ -9,6 +9,7 @@ from typing import (Any,
                     )
 
 import PIL
+from PIL.Image import Image
 from bokeh.io.export import get_screenshot_as_png
 from bokeh.io import (export_png,
                       export_svg,
@@ -180,7 +181,7 @@ class BokehPlotter:
 
         return self.show_in_browser()
 
-    def plot_PIL_Image_png(self) -> PIL.Image:
+    def plot_PIL_Image_png(self) -> Image:
         """
         Returns plot as a PIL Image object
 
